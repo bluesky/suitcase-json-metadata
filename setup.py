@@ -9,7 +9,7 @@ import versioneer
 # and/or pip.
 if sys.version_info < (3, 6):
     error = """
-suitcase.json-metadata does not support Python {0}.
+suitcase.json_metadata does not support Python {0}.
 Python 3.6 and above is required. Check your Python version like so:
 
 python3 --version
@@ -33,11 +33,11 @@ with open(path.join(here, 'requirements.txt')) as requirements_file:
 
 
 setup(
-    name='suitcase-json-metadata',
+    name='suitcase-json_metadata',
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     long_description=readme,
-    packages=['suitcase.json-metadata'],
+    packages=['suitcase.json_metadata'],
     entry_points={
         'console_scripts': [
             # 'some.module:some_function',
@@ -45,7 +45,7 @@ setup(
         },
     include_package_data=True,
     package_data={
-        'suitcase.json-metadata': [
+        'suitcase.json_metadata': [
             # When adding files here, remember to update MANIFEST.in as well,
             # or else they will not be included in the distribution on PyPI!
             # 'path/to/data_file',
