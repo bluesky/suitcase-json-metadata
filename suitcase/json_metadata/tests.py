@@ -4,9 +4,6 @@ from event_model import _apply_to_dict_recursively
 from . import export
 import json
 import pytest
-from suitcase.utils.conftest import (simple_plan,
-                                     multi_stream_one_descriptor_plan,
-                                     one_stream_multi_descriptors_plan)
 
 
 def create_expected(collector):
@@ -36,10 +33,7 @@ def create_expected(collector):
     return expected
 
 
-@pytest.mark.parametrize('plan', [simple_plan,
-                         multi_stream_one_descriptor_plan,
-                         one_stream_multi_descriptors_plan])
-def test_export(plan, tmp_path, events_data):
+def test_export(tmp_path, example_data):
     ''' runs a test using the plan that is passed through to it
 
     ..note::
@@ -50,7 +44,7 @@ def test_export(plan, tmp_path, events_data):
 
     '''
 
-    collector = events_data(plan)
+    collector = example_data
     expected = create_expected(collector)
     artifacts = export(collector, tmp_path, file_prefix='')
 
