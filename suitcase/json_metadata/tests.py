@@ -44,7 +44,7 @@ def test_export(tmp_path, example_data):
 
     '''
 
-    collector = example_data
+    collector = example_data()
     expected = create_expected(collector)
     artifacts = export(collector, tmp_path, file_prefix='')
 
