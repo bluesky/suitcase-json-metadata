@@ -2,8 +2,8 @@
 Usage
 =====
 
-Start by importing ``suitcase.json-metadata``.
+Start by importing ``suitcase.json_metadata``.
 
 .. code-block:: python
 
-    import suitcase.json-metadata
+    import suitcase.json_metadata
