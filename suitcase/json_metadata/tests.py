@@ -49,7 +49,6 @@ def _apply_to_dict_recursively(dictionary, func):
         dictionary[key] = func(val)
 
 
-
 def test_export(tmp_path, example_data):
     ''' runs a test using the plan that is passed through to it
 
