@@ -3,7 +3,6 @@ import event_model
 from event_model import _apply_to_dict_recursively
 from . import export
 import json
-import pytest
 
 
 def create_expected(collector):
