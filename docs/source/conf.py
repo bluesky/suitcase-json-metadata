@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #
-# json-metadata documentation build configuration file, created by
+# json_metadata documentation build configuration file, created by
 # sphinx-quickstart on Thu Jun 28 12:35:56 2018.
 #
 # This file is execfile()d with the current directory set to its
@@ -67,17 +67,17 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = 'suitcase.json-metadata'
-copyright = 'suitcase.json-metadata Contributors'
-author = 'suitcase.json-metadata Contributors'
+project = 'suitcase.json_metadata'
+copyright = 'suitcase.json_metadata Contributors'
+author = 'suitcase.json_metadata Contributors'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
-import suitcase.json-metadata
+import suitcase.json_metadata
 # The short X.Y version.
-version = suitcase.json-metadata.__version__
+version = suitcase.json_metadata.__version__
 # The full version, including alpha/beta/rc tags.
 release = version
 
@@ -136,7 +136,7 @@ html_sidebars = {
 # -- Options for HTMLHelp output ------------------------------------------
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'json-metadata'
+htmlhelp_basename = 'json_metadata'
 
 
 # -- Options for LaTeX output ---------------------------------------------
@@ -163,7 +163,7 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'json-metadata.tex', 'json-metadata Documentation',
+    (master_doc, 'json_metadata.tex', 'json_metadata Documentation',
      'Contributors', 'manual'),
 ]
 
@@ -173,7 +173,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'json-metadata', 'json-metadata Documentation',
+    (master_doc, 'json_metadata', 'json_metadata Documentation',
      [author], 1)
 ]
 
@@ -184,8 +184,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'json-metadata', 'json-metadata Documentation',
-     author, 'json-metadata', '',
+    (master_doc, 'json_metadata', 'json_metadata Documentation',
+     author, 'json_metadata', '',
      'Miscellaneous'),
 ]
 
