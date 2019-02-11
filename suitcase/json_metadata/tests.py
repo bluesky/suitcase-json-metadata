@@ -12,7 +12,7 @@ def create_expected(collector):
     for name, doc in collector:
         if name in ['start', 'stop']:
             sanitized_doc = event_model.sanitize_doc(doc)
-            expected['metadata'][name] = doc
+            expected['metadata'][name] = sanitized_doc
         elif name == 'descriptor':
             sanitized_doc = event_model.sanitize_doc(doc)
             expected['metadata']['descriptors'

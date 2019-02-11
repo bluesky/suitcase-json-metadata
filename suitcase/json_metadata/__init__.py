@@ -21,7 +21,8 @@ class NumpyEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-def export(gen, directory, file_prefix='{uid}-', cls=NumpyEncoder, **kwargs):
+def export(gen, directory, file_prefix='{uid}-', cls=event_model.NumpyEncoder,
+           **kwargs):
     """
     Export the meta data from a stream of documents to a JSON file.
 
@@ -61,7 +62,7 @@ def export(gen, directory, file_prefix='{uid}-', cls=NumpyEncoder, **kwargs):
     cls : class, optional
         This is a ``json.JSONEncoder``, or child, class that will be passed to
         ``json.dump`` as a kwarg which ensures that all items are encoded
-        correctly. The defualt is ``NumpyEncoder``, defined below, which also
+        correctly. The defualt is ``event_model.NumpyEncoder`` which also
         ensures that all ``numpy`` objects are converted to built-in python
         ones.
     **kwargs : kwargs
@@ -130,7 +131,7 @@ class Serializer(event_model.DocumentRouter):
     cls : class, optional
         This is a ``json.JSONEncoder``, or child, class that will be passed to
         ``json.dump`` as a kwarg which ensures that all items are encoded
-        correctly. The defualt is ``NumpyEncoder``, defined below, which also
+        correctly. The defualt is ``event_model.NumpyEncoder`` which also
         ensures that all ``numpy`` objects are converted to built-in python
         ones.
     **kwargs : kwargs
@@ -140,24 +141,26 @@ class Serializer(event_model.DocumentRouter):
     dest : dict
         dict mapping the 'labels' to lists of file names
     """
-    def __init__(self, directory, file_prefix='{uid}-', cls=NumpyEncoder,
-                 **kwargs):
+    def __init__(self, directory, file_prefix='{uid}-',
+                 cls=event_model.NumpyEncoder, **kwargs):
 
         if isinstance(directory, (str, Path)):
             self.manager = suitcase.utils.MultiFileManager(directory)
         else:
             self.manager = directory
 
-        self.artifacts = self.manager._artifacts
         self._meta = defaultdict(dict)  # to be exported as JSON at the end
         self._meta['metadata']['descriptors'] = defaultdict(lambda:
                                                             defaultdict(dict))
-        self._stream_names = {}  # maps stream_names to each descriptor uids
-        self._files = {}  # map descriptor uid to file handle of tiff file
-        self._filenames = {}  # map descriptor uid to file names of tiff files
         self._file_prefix = file_prefix
         self._templated_file_prefix = ''
         self._kwargs = dict(cls=cls, **kwargs)
+
+    @property
+    def artifacts(self):
+        # The manager's artifacts attribute is itself a property, and we must
+        # access it a new each time to be sure to get the latest content.
+        return self.manager.artifacts
 
     def start(self, doc):
         '''Add `start` document information to the metadata dictionary.
@@ -197,7 +200,6 @@ class Serializer(event_model.DocumentRouter):
         f = self.manager.open('run_metadata',
                               f'{self._templated_file_prefix}meta.json', 'xt')
         json.dump(self._meta, f)
-        self._files['meta'] = f
 
     def descriptor(self, doc):
         '''Add `descriptor` document information to the metadata dictionary.
@@ -221,5 +223,4 @@ class Serializer(event_model.DocumentRouter):
     def close(self):
         '''Close all of the files opened by this Serializer.
         '''
-        for file in self._files.values():
-            file.close()
+        self.manager.close()
