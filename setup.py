@@ -33,7 +33,7 @@ with open(path.join(here, 'requirements.txt')) as requirements_file:
 
 
 setup(
-    name='suitcase-json_metadata',
+    name='suitcase-json-metadata',
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     long_description=readme,

@@ -1,6 +1,7 @@
 from collections import defaultdict
 import event_model
 import json
+import numpy
 from pathlib import Path
 import suitcase.utils
 from ._version import get_versions
@@ -10,7 +11,17 @@ __version__ = get_versions()['version']
 del get_versions
 
 
-def export(gen, directory, file_prefix='{uid}-', **kwargs):
+class NumpyEncoder(json.JSONEncoder):
+    # Credit: https://stackoverflow.com/a/47626762/1221924
+    def default(self, obj):
+        if isinstance(obj, (numpy.generic, numpy.ndarray)):
+            if numpy.isscalar(obj):
+                return obj.item()
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
+
+
+def export(gen, directory, file_prefix='{uid}-', cls=NumpyEncoder, **kwargs):
     """
     Export the meta data from a stream of documents to a JSON file.
 
@@ -47,6 +58,12 @@ def export(gen, directory, file_prefix='{uid}-', **kwargs):
         ``{uid}-`` which is guaranteed to be present and unique. A more
         descriptive value depends on the application and is therefore left to
         the user.
+    cls : class, optional
+        This is a ``json.JSONEncoder``, or child, class that will be passed to
+        ``json.dump`` as a kwarg which ensures that all items are encoded
+        correctly. The defualt is ``NumpyEncoder``, defined below, which also
+        ensures that all ``numpy`` objects are converted to built-in python
+        ones.
     **kwargs : kwargs
         kwargs to be passed to ``json.dump``.
     Returns
@@ -64,7 +81,7 @@ def export(gen, directory, file_prefix='{uid}-', **kwargs):
     Place the files in a different directory, such as on a mounted USB stick.
     >>> export(gen, '/path/to/my_usb_stick')
     """
-    serializer = Serializer(directory, file_prefix, **kwargs)
+    serializer = Serializer(directory, file_prefix, cls=cls, **kwargs)
     try:
         for item in gen:
             serializer(*item)
@@ -110,6 +127,12 @@ class Serializer(event_model.DocumentRouter):
         ``{uid}-`` which is guaranteed to be present and unique. A more
         descriptive value depends on the application and is therefore left to
         the user.
+    cls : class, optional
+        This is a ``json.JSONEncoder``, or child, class that will be passed to
+        ``json.dump`` as a kwarg which ensures that all items are encoded
+        correctly. The defualt is ``NumpyEncoder``, defined below, which also
+        ensures that all ``numpy`` objects are converted to built-in python
+        ones.
     **kwargs : kwargs
         kwargs to be passed to ``json.dump``.
     Returns
@@ -117,7 +140,8 @@ class Serializer(event_model.DocumentRouter):
     dest : dict
         dict mapping the 'labels' to lists of file names
     """
-    def __init__(self, directory, file_prefix='{uid}-', **kwargs):
+    def __init__(self, directory, file_prefix='{uid}-', cls=NumpyEncoder,
+                 **kwargs):
 
         if isinstance(directory, (str, Path)):
             self.manager = suitcase.utils.MultiFileManager(directory)
@@ -133,7 +157,7 @@ class Serializer(event_model.DocumentRouter):
         self._filenames = {}  # map descriptor uid to file names of tiff files
         self._file_prefix = file_prefix
         self._templated_file_prefix = ''
-        self._kwargs = kwargs
+        self._kwargs = dict(cls=cls, **kwargs)
 
     def start(self, doc):
         '''Add `start` document information to the metadata dictionary.
