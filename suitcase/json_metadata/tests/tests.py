@@ -1,6 +1,6 @@
 from collections import defaultdict
 import event_model
-from . import export
+from .. import export
 import json
 
 
