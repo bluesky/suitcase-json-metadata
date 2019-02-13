@@ -145,9 +145,9 @@ class Serializer(event_model.DocumentRouter):
                  cls=event_model.NumpyEncoder, **kwargs):
 
         if isinstance(directory, (str, Path)):
-            self.manager = suitcase.utils.MultiFileManager(directory)
+            self._manager = suitcase.utils.MultiFileManager(directory)
         else:
-            self.manager = directory
+            self._manager = directory
 
         self._meta = defaultdict(dict)  # to be exported as JSON at the end
         self._meta['metadata']['descriptors'] = defaultdict(lambda:
@@ -160,7 +160,7 @@ class Serializer(event_model.DocumentRouter):
     def artifacts(self):
         # The manager's artifacts attribute is itself a property, and we must
         # access it a new each time to be sure to get the latest content.
-        return self.manager.artifacts
+        return self._manager.artifacts
 
     def start(self, doc):
         '''Add `start` document information to the metadata dictionary.
@@ -197,8 +197,8 @@ class Serializer(event_model.DocumentRouter):
         self._meta['metadata']['stop'] = doc
 
         # open a json file for the metadata and add self._meta to it.
-        f = self.manager.open('run_metadata',
-                              f'{self._templated_file_prefix}meta.json', 'xt')
+        f = self._manager.open('run_metadata',
+                               f'{self._templated_file_prefix}meta.json', 'xt')
         json.dump(self._meta, f)
 
     def descriptor(self, doc):
@@ -223,4 +223,4 @@ class Serializer(event_model.DocumentRouter):
     def close(self):
         '''Close all of the files opened by this Serializer.
         '''
-        self.manager.close()
+        self._manager.close()
