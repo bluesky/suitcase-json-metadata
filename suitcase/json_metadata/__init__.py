@@ -82,12 +82,9 @@ def export(gen, directory, file_prefix='{uid}-', cls=event_model.NumpyEncoder,
     Place the files in a different directory, such as on a mounted USB stick.
     >>> export(gen, '/path/to/my_usb_stick')
     """
-    serializer = Serializer(directory, file_prefix, cls=cls, **kwargs)
-    try:
+    with Serializer(directory, file_prefix, cls=cls, **kwargs) as serializer:
         for item in gen:
             serializer(*item)
-    finally:
-        serializer.close()
 
     return serializer.artifacts
 
@@ -224,3 +221,9 @@ class Serializer(event_model.DocumentRouter):
         '''Close all of the files opened by this Serializer.
         '''
         self._manager.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exception_details):
+        self.close()
