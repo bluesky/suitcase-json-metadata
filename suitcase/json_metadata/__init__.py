@@ -73,7 +73,7 @@ def export(gen, directory, file_prefix='{uid}-', cls=event_model.NumpyEncoder,
         dict mapping the 'labels' to lists of file names
     Examples
     --------
-    Generate files with unique-identfier names in the current directory.
+    Generate files with unique-identifier names in the current directory.
     >>> export(gen, '')
     Generate files with more readable metadata in the file names.
     >>> export(gen, '', '{plan_name}-{motors}-')
@@ -141,7 +141,7 @@ class Serializer(event_model.DocumentRouter):
 
     Examples
     --------
-    Generate files with unique-identfier names in the current directory.
+    Generate files with unique-identifier names in the current directory.
     >>> export(gen, '')
     Generate files with more readable metadata in the file names.
     >>> export(gen, '', '{plan_name}-{motors}-')
