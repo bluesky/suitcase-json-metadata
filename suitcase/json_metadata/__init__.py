@@ -35,9 +35,11 @@ def export(gen, directory, file_prefix='{uid}-', cls=event_model.NumpyEncoder,
                                     stream_name2: ...}}}
 
     .. note::
+
         This can alternatively be used to write data to generic buffers rather
         than creating files on disk. See the documentation for the
         ``directory`` parameter below.
+
     Parameters
     ----------
     gen : generator
@@ -67,19 +69,29 @@ def export(gen, directory, file_prefix='{uid}-', cls=event_model.NumpyEncoder,
         ones.
     **kwargs : kwargs
         kwargs to be passed to ``json.dump``.
+
     Returns
     -------
-    dest : dict
-        dict mapping the 'labels' to lists of file names
+    artifacts : dict
+        Maps 'labels' to lists of artifacts (e.g. filepaths)
+
     Examples
     --------
+
     Generate files with unique-identifier names in the current directory.
+
     >>> export(gen, '')
+
     Generate files with more readable metadata in the file names.
+
     >>> export(gen, '', '{plan_name}-{motors}-')
+
     Include the experiment's start time formatted as YY-MM-DD_HH-MM.
+
     >>> export(gen, '', '{time:%Y-%m-%d_%H:%M}')
+
     Place the files in a different directory, such as on a mounted USB stick.
+
     >>> export(gen, '/path/to/my_usb_stick')
     """
     with Serializer(directory, file_prefix, cls=cls, **kwargs) as serializer:
@@ -134,20 +146,23 @@ class Serializer(event_model.DocumentRouter):
     **kwargs : kwargs
         kwargs to be passed to ``json.dump``.
 
-    Returns
-    -------
-    dest : dict
-        dict mapping the 'labels' to lists of file names
-
     Examples
     --------
+
     Generate files with unique-identifier names in the current directory.
+
     >>> export(gen, '')
+
     Generate files with more readable metadata in the file names.
+
     >>> export(gen, '', '{plan_name}-{motors}-')
+
     Include the experiment's start time formatted as YY-MM-DD_HH-MM.
+
     >>> export(gen, '', '{time:%Y-%m-%d_%H:%M}')
+
     Place the files in a different directory, such as on a mounted USB stick.
+
     >>> export(gen, '/path/to/my_usb_stick')
     """
     def __init__(self, directory, file_prefix='{uid}-',
