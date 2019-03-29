@@ -66,9 +66,7 @@ def test_export_with_kwargs(tmp_path, example_data, kwargs):
             content = f.read()
             actual = json.loads(content)
         n = 20
-        first_n_simbols = ('{\n' + \
-                            ' ' * kwargs['indent'] + \
-                            '"metadata": {\n' + \
-                            ' ' * kwargs['indent'])[:n]
+        first_n_simbols = ('{\n' + ' ' * kwargs['indent'] +
+                           '"metadata": {\n' + ' ' * kwargs['indent'])[:n]
         assert content[:n] == first_n_simbols
         assert actual == expected
