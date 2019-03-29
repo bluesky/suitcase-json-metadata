@@ -43,9 +43,9 @@ def test_export(tmp_path, example_data):
         assert actual == expected
 
 
-@pytest.mark.parametrize("kwargs", [{'sort_keys': True, 'indent': 4},
+@pytest.mark.parametrize("kwargs", [{'indent': 4},
                                     {'sort_keys': True, 'indent': 2,
-                                     'separators': (',', ':')}])
+                                     'separators': (',', ': ')}])
 def test_export_with_kwargs(tmp_path, example_data, kwargs):
     ''' runs a test using the plan that is passed through to it
 
@@ -63,5 +63,12 @@ def test_export_with_kwargs(tmp_path, example_data, kwargs):
 
     for filename in artifacts['run_metadata']:
         with open(filename) as f:
-            actual = json.load(f)
+            content = f.read()
+            actual = json.loads(content)
+        n = 20
+        first_n_simbols = ('{\n' + \
+                            ' ' * kwargs['indent'] + \
+                            '"metadata": {\n' + \
+                            ' ' * kwargs['indent'])[:n]
+        assert content[:n] == first_n_simbols
         assert actual == expected
