@@ -223,7 +223,7 @@ class Serializer(event_model.DocumentRouter):
         # open a json file for the metadata and add self._meta to it.
         f = self._manager.open('run_metadata',
                                f'{self._templated_file_prefix}meta.json', 'xt')
-        json.dump(self._meta, f)
+        json.dump(self._meta, f, **self._kwargs)
 
     def descriptor(self, doc):
         '''Add `descriptor` document information to the metadata dictionary.
