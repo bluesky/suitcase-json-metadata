@@ -37,6 +37,7 @@ setup(
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
     long_description=readme,
+    long_description_content_type='text/markdown',
     packages=['suitcase.json_metadata', 'suitcase.json_metadata.tests'],
     entry_points={
         'console_scripts': [
