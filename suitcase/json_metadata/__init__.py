@@ -21,8 +21,8 @@ class NumpyEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-def export(gen, directory, file_prefix='{uid}-', cls=event_model.NumpyEncoder,
-           **kwargs):
+def export(gen, directory, file_prefix='{start[uid]}-',
+           cls=event_model.NumpyEncoder, **kwargs):
     """
     Export the meta data from a stream of documents to a JSON file.
 
@@ -56,9 +56,10 @@ def export(gen, directory, file_prefix='{uid}-', cls=event_model.NumpyEncoder,
         (http://nsls-ii.github.io/suitcase/) for details.
     file_prefix : str, optional
         The first part of the filename of the generated output files. This
-        string may include templates as in ``{proposal_id}-{sample_name}-``,
+        string may include templates as in
+        ``{start[proposal_id]}-{start[sample_name]}-``,
         which are populated from the RunStart document. The default value is
-        ``{uid}-`` which is guaranteed to be present and unique. A more
+        ``{start[uid]}-`` which is guaranteed to be present and unique. A more
         descriptive value depends on the application and is therefore left to
         the user.
     cls : class, optional
@@ -132,9 +133,10 @@ class Serializer(event_model.DocumentRouter):
         (http://nsls-ii.github.io/suitcase/) for details.
     file_prefix : str, optional
         The first part of the filename of the generated output files. This
-        string may include templates as in ``{proposal_id}-{sample_name}-``,
+        string may include templates as in
+        ``{start[proposal_id]}-{start[sample_name]}-``,
         which are populated from the RunStart document. The default value is
-        ``{uid}-`` which is guaranteed to be present and unique. A more
+        ``{start[uid]}-`` which is guaranteed to be present and unique. A more
         descriptive value depends on the application and is therefore left to
         the user.
     cls : class, optional
@@ -155,17 +157,17 @@ class Serializer(event_model.DocumentRouter):
 
     Generate files with more readable metadata in the file names.
 
-    >>> export(gen, '', '{plan_name}-{motors}-')
+    >>> export(gen, '', '{start[plan_name]}-{start[motors]}-')
 
     Include the experiment's start time formatted as YYYY-MM-DD_HH-MM.
 
-    >>> export(gen, '', '{time:%Y-%m-%d_%H:%M}')
+    >>> export(gen, '', '{start[time]:%Y-%m-%d_%H:%M}')
 
     Place the files in a different directory, such as on a mounted USB stick.
 
     >>> export(gen, '/path/to/my_usb_stick')
     """
-    def __init__(self, directory, file_prefix='{uid}-',
+    def __init__(self, directory, file_prefix='{start[uid]}-',
                  cls=event_model.NumpyEncoder, **kwargs):
 
         if isinstance(directory, (str, Path)):
@@ -205,7 +207,7 @@ class Serializer(event_model.DocumentRouter):
 
         # add the start doc to self._meta and format self._file_prefix
         self._meta['metadata']['start'] = doc
-        self._templated_file_prefix = self._file_prefix.format(**doc)
+        self._templated_file_prefix = self._file_prefix.format(start=doc)
 
     def stop(self, doc):
         '''Add `stop` document information to the metadata dictionary.
@@ -224,6 +226,7 @@ class Serializer(event_model.DocumentRouter):
         f = self._manager.open('run_metadata',
                                f'{self._templated_file_prefix}meta.json', 'xt')
         json.dump(self._meta, f, **self._kwargs)
+        self.close()
 
     def descriptor(self, doc):
         '''Add `descriptor` document information to the metadata dictionary.
