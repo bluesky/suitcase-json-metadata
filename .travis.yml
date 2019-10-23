@@ -9,7 +9,7 @@ cache:
 install:
   # record the installed packages before installing suitcase-json-metadata
   - pip freeze
-  - pip install --upgrade pytest
+  - pip install --upgrade attrs
   # Install this package and the packages listed in requirements.txt.
   - pip install .
   # Install extra requirements for running tests and building docs.
