@@ -7,14 +7,10 @@ cache:
     - $HOME/.ccache  # https://github.com/travis-ci/travis-ci/issues/5853
 
 install:
-  # record the installed packages before installing suitcase-json-metadata
-  - pip freeze
   # Install this package and the packages listed in requirements.txt.
   - pip install .
   # Install extra requirements for running tests and building docs.
   - pip install -r requirements-dev.txt
-  # record the installed packages after installing suitcase-json-metadata
-  - pip freeze
 
 script:
   - coverage run -m pytest  # Run the tests and check for test coverage.
