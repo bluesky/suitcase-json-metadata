@@ -2,5 +2,16 @@
 Release History
 ===============
 
-Initial Release (YYYY-MM-DD)
-----------------------------
+Release 0.2.1 (2021-10-08)
+--------------------------
+
+- Stop using special ophyd branch in test requirements
+
+Release 0.2.0 (2019-05-28)
+--------------------------
+
+Release 0.1.2 (2019-03-08)
+--------------------------
+
+Release 0.1.1 (2019-03-07)
+--------------------------
